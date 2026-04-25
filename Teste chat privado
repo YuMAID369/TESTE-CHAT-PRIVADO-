@@ -367,5 +367,338 @@ G2L.ToggleButton.MouseButton1Click:Connect(function()
 end)
 
 task.spawn(ConnectWebSocket)
+return G2L.ScreenGuiG2L.ToggleButton.BackgroundTransparency = 1 
+G2L.ToggleButton.Image = ID_NORMAL
+G2L.ToggleButton.Parent = G2L.ScreenGui
+
+-- JANELA PRINCIPAL
+G2L.Main = Instance.new("Frame")
+G2L.Main.Name = "MainFrame"
+G2L.Main.Size = UDim2.new(0, 400, 0, 250)
+G2L.Main.Position = UDim2.new(0.5, -200, 0.5, -125)
+G2L.Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+G2L.Main.BorderSizePixel = 0
+G2L.Main.Visible = false
+G2L.Main.Parent = G2L.ScreenGui
+
+G2L.MainStroke = Instance.new("UIStroke")
+G2L.MainStroke.Color = Color3.fromRGB(255, 255, 255)
+G2L.MainStroke.Thickness = 2
+G2L.MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+G2L.MainStroke.Parent = G2L.Main
+
+-- LOGO CENTRAL (MARCA D'ÁGUA)
+G2L.CenterLogo = Instance.new("ImageLabel")
+G2L.CenterLogo.Size = UDim2.new(0, 120, 0, 120)
+G2L.CenterLogo.Position = UDim2.new(0.5, -60, 0.5, -60)
+G2L.CenterLogo.BackgroundTransparency = 1
+G2L.CenterLogo.Image = ID_LOGO_CENTRO
+G2L.CenterLogo.ImageTransparency = 0.6
+G2L.CenterLogo.ZIndex = 1
+G2L.CenterLogo.Parent = G2L.Main
+
+-- TOPBAR (ABAS)
+G2L.TopBar = Instance.new("Frame")
+G2L.TopBar.Size = UDim2.new(1, 0, 0, 40)
+G2L.TopBar.BackgroundTransparency = 1
+G2L.TopBar.ZIndex = 5
+G2L.TopBar.Parent = G2L.Main
+
+local function CriarAbaVisual(nome, pos, isDefault)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.5, 0, 1, 0)
+    btn.Position = UDim2.new(pos, 0, 0, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = nome
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 18
+    btn.Parent = G2L.TopBar
+
+    local line = Instance.new("Frame")
+    line.Name = "Indicator"
+    line.Size = UDim2.new(0.8, 0, 0, 2)
+    line.Position = UDim2.new(0.1, 0, 0.85, 0)
+    line.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    line.Visible = isDefault
+    line.BorderSizePixel = 0
+    line.Parent = btn
+
+    return btn
+end
+
+G2L.TabGlobal = CriarAbaVisual("[Chat Global]", 0, true)
+G2L.TabPrivado = CriarAbaVisual("[Chat Privado]", 0.5, false)
+
+-- Divisor vertical entre abas
+local divider = Instance.new("Frame")
+divider.Size = UDim2.new(0, 2, 0, 20)
+divider.Position = UDim2.new(0.5, -1, 0.25, 0)
+divider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+divider.BorderSizePixel = 0
+divider.Parent = G2L.TopBar
+
+-- AREAS DE MENSAGENS (CONTAINERS)
+G2L.GlobalContainer = Instance.new("ScrollingFrame")
+G2L.GlobalContainer.Size = UDim2.new(1, -20, 1, -100)
+G2L.GlobalContainer.Position = UDim2.new(0, 10, 0, 45)
+G2L.GlobalContainer.BackgroundTransparency = 1
+G2L.GlobalContainer.ScrollBarThickness = 2
+G2L.GlobalContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+G2L.GlobalContainer.ZIndex = 5
+G2L.GlobalContainer.Visible = true
+G2L.GlobalContainer.Parent = G2L.Main
+
+G2L.PrivateContainer = G2L.GlobalContainer:Clone()
+G2L.PrivateContainer.Visible = false
+G2L.PrivateContainer.Parent = G2L.Main
+
+local GlobalLayout = Instance.new("UIListLayout")
+GlobalLayout.Padding = UDim.new(0, 5)
+GlobalLayout.Parent = G2L.GlobalContainer
+
+local PrivateLayout = Instance.new("UIListLayout")
+PrivateLayout.Padding = UDim.new(0, 5)
+PrivateLayout.Parent = G2L.PrivateContainer
+
+-- INPUT AREA (IGUAL A IMAGEM)
+G2L.InputFrame = Instance.new("Frame")
+G2L.InputFrame.Size = UDim2.new(1, -20, 0, 35)
+G2L.InputFrame.Position = UDim2.new(0, 10, 1, -45)
+G2L.InputFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+G2L.InputFrame.ZIndex = 10
+G2L.InputFrame.Parent = G2L.Main
+
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Color = Color3.fromRGB(255, 255, 255)
+InputStroke.Thickness = 1
+InputStroke.Parent = G2L.InputFrame
+
+G2L.Input = Instance.new("TextBox")
+G2L.Input.Size = UDim2.new(1, -40, 1, 0)
+G2L.Input.Position = UDim2.new(0, 10, 0, 0)
+G2L.Input.BackgroundTransparency = 1
+G2L.Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L.Input.PlaceholderText = "To chat click here..."
+G2L.Input.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+G2L.Input.TextXAlignment = Enum.TextXAlignment.Left
+G2L.Input.TextSize = 16
+G2L.Input.Font = Enum.Font.SourceSans
+G2L.Input.Parent = G2L.InputFrame
+
+G2L.SendBtn = Instance.new("ImageButton")
+G2L.SendBtn.Size = UDim2.new(0, 20, 0, 20)
+G2L.SendBtn.Position = UDim2.new(1, -30, 0.5, -10)
+G2L.SendBtn.BackgroundTransparency = 1
+G2L.SendBtn.Image = "rbxassetid://18940312887"
+G2L.SendBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+G2L.SendBtn.Parent = G2L.InputFrame
+
+-- NOTIFICAÇÃO DE PEDIDO PRIVADO
+local function CriarNotificacao(senderName)
+    local Notif = Instance.new("Frame")
+    Notif.Size = UDim2.new(0, 250, 0, 100)
+    Notif.Position = UDim2.new(0.5, -125, 0.4, -50)
+    Notif.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Notif.Parent = G2L.ScreenGui
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(255, 255, 255)
+    stroke.Thickness = 2
+    stroke.Parent = Notif
+
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 0, 60)
+    text.BackgroundTransparency = 1
+    text.Text = senderName .. " deseja entrar no Chat Privado?"
+    text.TextColor3 = Color3.fromRGB(255, 255, 255)
+    text.TextWrapped = true
+    text.Font = Enum.Font.SourceSansBold
+    text.TextSize = 16
+    text.Parent = Notif
+
+    local accept = Instance.new("TextButton")
+    accept.Size = UDim2.new(0.4, 0, 0, 30)
+    accept.Position = UDim2.new(0.05, 0, 0.65, 0)
+    accept.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    accept.Text = "ACEITAR"
+    accept.TextColor3 = Color3.fromRGB(0, 255, 0)
+    accept.Parent = Notif
+
+    local decline = accept:Clone()
+    decline.Position = UDim2.new(0.55, 0, 0.65, 0)
+    decline.Text = "RECUSAR"
+    decline.TextColor3 = Color3.fromRGB(255, 0, 0)
+    decline.Parent = Notif
+
+    accept.MouseButton1Click:Connect(function()
+        privatePartner = senderName
+        Notif:Destroy()
+        -- Notificar o outro que aceitou
+        socket:Send(HttpService:JSONEncode({
+            type = "private_response",
+            accepted = true,
+            target = senderName,
+            sender = Player.Name
+        }))
+        -- Muda para aba privada
+        G2L.TabPrivado.Indicator.Visible = true
+        G2L.TabGlobal.Indicator.Visible = false
+        G2L.GlobalContainer.Visible = false
+        G2L.PrivateContainer.Visible = true
+        currentTab = "Privado"
+    end)
+
+    decline.MouseButton1Click:Connect(function()
+        Notif:Destroy()
+        socket:Send(HttpService:JSONEncode({
+            type = "private_response",
+            accepted = false,
+            target = senderName,
+            sender = Player.Name
+        }))
+    end)
+end
+
+-- LOGICA DE MENSAGENS
+local function AdicionarMensagem(data)
+    local container = G2L.GlobalContainer
+    if data.type == "private" then
+        if (data.sender == Player.Name and data.target == privatePartner) or 
+           (data.sender == privatePartner and data.target == Player.Name) then
+            container = G2L.PrivateContainer
+        else
+            return -- Mensagem privada de outros, ignora
+        end
+    end
+
+    local msgFrame = Instance.new("TextButton")
+    msgFrame.Size = UDim2.new(1, 0, 0, 20)
+    msgFrame.BackgroundTransparency = 1
+    msgFrame.Text = ""
+    msgFrame.Parent = container
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.RichText = true
+    label.Font = Enum.Font.SourceSansBold
+    label.TextSize = 16
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local color = (data.sender == Player.Name) and "rgb(255,255,255)" or "rgb(200,200,200)"
+    label.Text = string.format("<font color='%s'>[%s]:</font> <font color='rgb(255,255,255)'>%s</font>", color, data.nickname or data.sender, data.message)
+    label.Parent = msgFrame
+
+    -- Double Click no Nickname para convite privado
+    msgFrame.MouseButton1Click:Connect(function()
+        local now = tick()
+        if now - lastClickTime < 0.5 then
+            if data.sender ~= Player.Name then
+                print("Enviando pedido de chat privado para: " .. data.sender)
+                socket:Send(HttpService:JSONEncode({
+                    type = "private_request",
+                    target = data.sender,
+                    sender = Player.Name
+                }))
+            end
+        end
+        lastClickTime = now
+    end)
+
+    container.CanvasPosition = Vector2.new(0, 99999)
+end
+
+-- CONEXÃO WEBSOCKET
+local socket
+local function ConnectWebSocket()
+    local success, res = pcall(function() return WebSocket.connect(wsUrl) end)
+    if success and res then
+        socket = res
+        socket.OnMessage:Connect(function(msg)
+            local ok, data = pcall(function() return HttpService:JSONDecode(msg) end)
+            if ok then
+                if data.type == "private_request" and data.target == Player.Name then
+                    CriarNotificacao(data.sender)
+                elseif data.type == "private_response" and data.target == Player.Name then
+                    if data.accepted then
+                        privatePartner = data.sender
+                        print("Chat privado iniciado com " .. data.sender)
+                    end
+                elseif data.message then
+                    AdicionarMensagem(data)
+                end
+            end
+        end)
+    else
+        task.wait(5)
+        ConnectWebSocket()
+    end
+end
+
+-- ENVIO DE MENSAGENS
+local function Enviar()
+    if socket and G2L.Input.Text ~= "" then
+        local payload = {
+            sender = Player.Name,
+            nickname = Player.DisplayName,
+            message = G2L.Input.Text,
+            type = (currentTab == "Privado" and privatePartner) and "private" or "global",
+            target = privatePartner
+        }
+        socket:Send(HttpService:JSONEncode(payload))
+        G2L.Input.Text = ""
+    end
+end
+
+G2L.SendBtn.MouseButton1Click:Connect(Enviar)
+G2L.Input.FocusLost:Connect(function(enter) if enter then Enviar() end end)
+
+-- ALTERNAR ABAS
+G2L.TabGlobal.MouseButton1Click:Connect(function()
+    currentTab = "Global"
+    G2L.TabGlobal.Indicator.Visible = true
+    G2L.TabPrivado.Indicator.Visible = false
+    G2L.GlobalContainer.Visible = true
+    G2L.PrivateContainer.Visible = false
+end)
+
+G2L.TabPrivado.MouseButton1Click:Connect(function()
+    currentTab = "Privado"
+    G2L.TabGlobal.Indicator.Visible = false
+    G2L.TabPrivado.Indicator.Visible = true
+    G2L.GlobalContainer.Visible = false
+    G2L.PrivateContainer.Visible = true
+end)
+
+-- ARRASTE
+local function MakeDraggable(gui)
+    local dragging, dragInput, dragStart, startPos
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    gui.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
+    end)
+end
+
+MakeDraggable(G2L.Main)
+MakeDraggable(G2L.ToggleButton)
+
+G2L.ToggleButton.MouseButton1Click:Connect(function() 
+    G2L.Main.Visible = not G2L.Main.Visible 
+end)
+
+task.spawn(ConnectWebSocket)
 return G2L.ScreenGui
 
